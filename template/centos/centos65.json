@@ -2,8 +2,8 @@
   "variables": {
     "provisioner": "provisionerless",
     "provisioner_version": "",
-    "iso_url": "http://mirrors.kernel.org/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-bin-DVD1.iso",
-    "iso_checksum": "32c7695b97f7dcd1f59a77a71f64f2957dddf738"
+    "iso_url": "file:///home/nick/Development/vagrant/iso/CentOS-6.5-x86_64-minimal/CentOS-6.5-x86_64-minimal.iso",
+    "iso_checksum": "f21a71e8e31df73297bdd1ccd4a64a36831284bd"
   },
   "builders": [{
     "vm_name": "centos65",
@@ -51,7 +51,12 @@
       ["modifyvm", "{{.Name}}", "--cpus", "1"]
     ]
   }],
-  "provisioners": [{
+  "provisioners": [
+  {
+	"type": "shell",
+	"inline": ["sudo yum update -y", "sudo yum groupinstall -y \"Development Tools\"", "sudo yum install -y kernel-devel"]
+  },
+  {
     "type": "shell",
     "environment_vars": [
       "PROVISIONER={{user `provisioner`}}",
@@ -67,7 +72,8 @@
       "script/cleanup.sh",
       "script/zerodisk.sh"
     ]
-  }],
+  }
+  ],
   "post-processors": [{
     "type": "vagrant",
     "keep_input_artifact": false,
